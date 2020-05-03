@@ -57,6 +57,10 @@ namespace DatingApp.API
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
                 ClockSkew = TimeSpan.Zero
             });
+
+            //adicionando Health Check:
+            services.AddHealthChecks();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +97,9 @@ namespace DatingApp.API
 
             //database first para EntityFrameWork
             //context.Database.EnsureCreated();
+
+            //usando o Health Check
+            app.UseHealthChecks("/check");
 
             app.UseAuthentication();
 
