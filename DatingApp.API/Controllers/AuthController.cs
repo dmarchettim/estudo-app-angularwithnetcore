@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace DatingApp.API.Controllers
 {    
@@ -36,7 +38,11 @@ namespace DatingApp.API.Controllers
 
 
             if(await _repository.UserExists(userForRegister.Username))
-            return BadRequest("Usuário já existente");
+            {
+                Log.Information(JsonConvert.SerializeObject(userForRegister));
+                Log.Information("Passou pela API!");
+                return BadRequest("Usuário já existente");
+            }
 
             var usuarioParaCriar = new User()
             {

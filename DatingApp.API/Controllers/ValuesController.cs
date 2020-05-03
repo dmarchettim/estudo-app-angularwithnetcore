@@ -6,6 +6,8 @@ using DatingApp.API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace DatingApp.API.Controllers
 {
@@ -15,10 +17,14 @@ namespace DatingApp.API.Controllers
     public class ValuesController : ControllerBase
     {
         public DataContext Context { get; }
+        public ILoggerFactory LoggerFactory { get; }
+        private readonly ILogger<ValuesController> logger;
 
-        public ValuesController(DataContext context)
+        public ValuesController(DataContext context, ILoggerFactory loggerFactory, ILogger<ValuesController> logger)
         {
+            this.logger = logger;
             this.Context = context;
+            LoggerFactory = loggerFactory;
         }
 
 
@@ -27,6 +33,11 @@ namespace DatingApp.API.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
+            //throw new Exception("Computer says no");
+            //Console.WriteLine("teste");
+            Log.Information("You can clap up to 50 times per post!");
+            //var logger = LoggerFactory.CreateLogger("diego");
+            logger.LogError("chamada incorreta!!");
             var result = await Context.Values.ToListAsync();
             return Ok(result);
         }

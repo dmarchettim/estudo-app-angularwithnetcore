@@ -15,6 +15,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics;
+using DatingApp.API.Helpers;
 
 namespace DatingApp.API
 {
@@ -62,6 +65,23 @@ namespace DatingApp.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                //configurando o Global Exception Handler no .NET Core - faremos isso também na Liquidez WMS!!!
+                app.UseExceptionHandler(builder => {
+                    builder.Run(async context => 
+                    {
+                        context.Response.StatusCode = (int)StatusCodes.Status500InternalServerError;
+
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+                        if(error != null)
+                        {
+                            context.Response.AdicionarErroAplicacao(error.Error.Message);
+                            await context.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                });
             }
 
             //app.UseHttpsRedirection();
