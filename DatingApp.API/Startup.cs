@@ -18,6 +18,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
 using DatingApp.API.Helpers;
+using AutoMapper;
 
 namespace DatingApp.API
 {
@@ -40,10 +41,13 @@ namespace DatingApp.API
             //Adicionando CORS:
             services.AddCors();
 
-            services.AddControllers();
+            services.AddAutoMapper(typeof(DatingRepository).Assembly);
+
+            services.AddControllers();//.AddNewtonsoftJson();
 
             //adicionando DY
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
 
             //adicionando geração do token JWT com IdentityModel.Tokens.Jwt
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -97,6 +101,7 @@ namespace DatingApp.API
 
             //database first para EntityFrameWork
             //context.Database.EnsureCreated();
+           
 
             //usando o Health Check
             app.UseHealthChecks("/check");
