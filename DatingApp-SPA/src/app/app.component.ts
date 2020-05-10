@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+
 import { AuthService } from './_services/auth.service';
 
 @Component({
@@ -11,14 +12,16 @@ export class AppComponent implements OnInit {
   title = 'app';
   helper = new JwtHelperService();
 
-  constructor(private authService: AuthService) {}
-  
-  
+  constructor(private authService: AuthService) { }
+
+
   ngOnInit(): void {
+
     //para evitar os erros de não identificar o token
     const token = localStorage.getItem('token');
-    if(token){
+    if (token) {
       this.authService.decodedToken = this.helper.decodeToken(token);
     }
+
   }
 }

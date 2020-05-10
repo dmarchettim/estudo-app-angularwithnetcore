@@ -41,6 +41,7 @@ namespace DatingApp.API
             //Adicionando CORS:
             services.AddCors();
 
+            //adicionando AutoMapper;
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
 
             services.AddControllers();//.AddNewtonsoftJson();
