@@ -19,6 +19,7 @@ import { MemberListComponent } from './member/member-list/member-list.component'
 import { MessageComponent } from './message/message.component';
 import { MemberCardComponent } from './member/member-card/member-card.component';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
+import { MemberEditComponent } from './member/member-edit/member-edit.component';
 
 export function tokenGetter() {
    return localStorage.getItem("token");
@@ -34,7 +35,8 @@ export function tokenGetter() {
       MemberListComponent,
       MessageComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -45,7 +47,7 @@ export function tokenGetter() {
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
       AppRoutingModule,
-      JwtModule.forRoot({
+      JwtModule.forRoot({ ///JwTModule é para enviar tokens automaticamente a cada requisição HTTP. Para mais informações, ver o site https://github.com/auth0/angular2-jwt
          config: {
            tokenGetter: tokenGetter,
            whitelistedDomains: ["localhost:5000"],

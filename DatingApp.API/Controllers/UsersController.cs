@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
@@ -41,6 +43,29 @@ namespace DatingApp.API.Controllers
             var userMapped = mapper.Map<UserForDetailedList>(user);
 
             return Ok(userMapped);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDTO user)
+        {
+            //verificando se o ID informado é o mesmo do ID do corpo
+            if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            return Unauthorized("Usuário diferente do ID fornecido no token");
+
+            var userFromRepo = await repository.GetUser(id);
+            
+            Console.WriteLine("antes do mapping");
+            Console.WriteLine(userFromRepo.Username);
+
+            mapper.Map(user, userFromRepo);
+
+            Console.WriteLine("depois do mapping");
+            Console.WriteLine(userFromRepo.Username);
+
+            if(await repository.SaveAll())
+            return NoContent();
+
+            throw new System.Exception($"Falha ao atualizar o Usuário com ID {id}");
         }
 
     }
