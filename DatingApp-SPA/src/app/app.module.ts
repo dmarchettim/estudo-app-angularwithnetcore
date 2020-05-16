@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from 'ngx-gallery';
+import { FileUploadModule  } from 'ng2-file-upload';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -20,6 +21,7 @@ import { MessageComponent } from './message/message.component';
 import { MemberCardComponent } from './member/member-card/member-card.component';
 import { MemberDetailComponent } from './member/member-detail/member-detail.component';
 import { MemberEditComponent } from './member/member-edit/member-edit.component';
+import { PhotoEditorComponent } from './member/photo-editor/photo-editor.component';
 
 export function tokenGetter() {
    return localStorage.getItem("token");
@@ -36,7 +38,8 @@ export function tokenGetter() {
       MessageComponent,
       MemberCardComponent,
       MemberDetailComponent,
-      MemberEditComponent
+      MemberEditComponent,
+      PhotoEditorComponent
    ],
    imports: [
       BrowserModule,
@@ -46,6 +49,7 @@ export function tokenGetter() {
       NgxGalleryModule,
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
+      FileUploadModule,
       AppRoutingModule,
       JwtModule.forRoot({ ///JwTModule é para enviar tokens automaticamente a cada requisição HTTP. Para mais informações, ver o site https://github.com/auth0/angular2-jwt
          config: {

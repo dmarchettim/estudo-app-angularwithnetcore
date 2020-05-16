@@ -3,6 +3,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTO;
 using DatingApp.API.Models;
@@ -15,16 +16,18 @@ using Newtonsoft.Json;
 using Serilog;
 
 namespace DatingApp.API.Controllers
-{    
+{
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
         private IAuthRepository _repository { get; set; }
-        private IConfiguration _config {get; set; }
+        private IConfiguration _config { get; set; }
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            _mapper = mapper;
             _repository = repo;
             _config = config;
         }
@@ -37,7 +40,7 @@ namespace DatingApp.API.Controllers
             userForRegister.Username = userForRegister.Username.ToLower();
 
 
-            if(await _repository.UserExists(userForRegister.Username))
+            if (await _repository.UserExists(userForRegister.Username))
             {
                 Log.Information(JsonConvert.SerializeObject(userForRegister));
                 Log.Information("Passou pela API!");
@@ -60,8 +63,8 @@ namespace DatingApp.API.Controllers
         {
             var user = await _repository.Login(userForLogin.Username, userForLogin.Password);
 
-            if(user == null) 
-            return Unauthorized();
+            if (user == null)
+                return Unauthorized();
 
             var claims = new[]
             {
@@ -77,7 +80,7 @@ namespace DatingApp.API.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = System.DateTime.Now.AddDays(1),
+                Expires = System.DateTime.Now.AddDays(2),
                 SigningCredentials = creds
             };
 
@@ -85,10 +88,14 @@ namespace DatingApp.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new{
-                    token = tokenHandler.WriteToken(token)
+            var userToReturn = _mapper.Map<UserForListDTO>(user);
+
+            return Ok(new
+            {
+                token = tokenHandler.WriteToken(token),
+                user =  userToReturn
             });
 
-        }        
+        }
     }
 }

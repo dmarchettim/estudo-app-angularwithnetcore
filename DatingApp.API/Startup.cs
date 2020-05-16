@@ -19,6 +19,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
 using DatingApp.API.Helpers;
 using AutoMapper;
+using DatingApp.API;
+using DatingApp.API.Registry;
 
 namespace DatingApp.API
 {
@@ -41,14 +43,20 @@ namespace DatingApp.API
             //Adicionando CORS:
             services.AddCors();
 
+            //adicionando as propriedades do appsettings.json para o CloudnarySettings.
+            //vale lembrar q é preciso ter a classe no mesmo formato para "deserializar"!
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+
             //adicionando AutoMapper;
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
 
             services.AddControllers();//.AddNewtonsoftJson();
 
             //adicionando DY
-            services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IDatingRepository, DatingRepository>();
+            // services.AddScoped<IAuthRepository, AuthRepository>();
+            // services.AddScoped<IDatingRepository, DatingRepository>();
+            services.RegistryIoC();
+            //Registry.RegistryIoC(services);
 
             //adicionando geração do token JWT com IdentityModel.Tokens.Jwt
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

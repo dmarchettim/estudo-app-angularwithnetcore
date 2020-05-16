@@ -15,13 +15,7 @@ import { UserService } from 'src/app/_services/user.service';
 export class MemberEditComponent implements OnInit {
   user: User;
   @ViewChild('editForm') editForm: NgForm;
-
-  constructor(private activeRoute: ActivatedRoute, 
-    private alertify: AlertifyService, 
-    private authService: AuthService,
-    private userService: UserService
-    ) { }
-
+  photoUrl: string;
   //o canDeactivate funciona apenas se sair da pagina, não funciona se fecharmos a janela. No caso, precisamos
   //implementar um HostListener para prevenir também de sair da página. ;)
   @HostListener('window:beforeunload', ['$event'])
@@ -31,6 +25,11 @@ export class MemberEditComponent implements OnInit {
     }
   }
 
+  constructor(private activeRoute: ActivatedRoute,
+    private alertify: AlertifyService,
+    private authService: AuthService,
+    private userService: UserService
+    ) { }
 
   ngOnInit() {
     this.loadUser();
@@ -38,6 +37,7 @@ export class MemberEditComponent implements OnInit {
 
   loadUser(){
     this.user = this.activeRoute.snapshot.data['currentUser'];
+    this.authService.currentPhotoUrl.subscribe(photo => this.photoUrl = photo);
   }
 
   updateUser(){      
@@ -52,6 +52,10 @@ export class MemberEditComponent implements OnInit {
 
     //resetar o form, obtendo-o através do ViewChild, e então colocá-lo preenchido com as informações do usuário
     this.editForm.reset(this.user);
+  }
+
+  updateMainPhoto(photoUrl){ //lembrando q aqui é um eventemitter de string
+    this.user.photoURL = photoUrl;
   }
 
 }
