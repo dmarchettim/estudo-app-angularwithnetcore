@@ -82,6 +82,17 @@ export class PhotoEditorComponent implements OnInit {
           isMain: res.isMain
         };
         this.photos.push(photo);
+        if(photo.isMain){
+          this.authService.changeMemberPhoto(photo.url);
+
+          // aqui, é preciso atualiar no usuário também, porque qdo carrega, pelo AppComponent, ele obtem as informações pelo que está
+          //na section do 'user'. Embora persistido no banco de dados já, como nos vamos mandar o user que está no authuser, ele nao ira
+          //pegar as infos do banco de dados pois não foi dado novo login(). Assim, a unica maneiara
+          //de atualizar é setando a foto na variavel currentUser do authService
+          this.authService.currentUser.photoURL = photo.url;
+
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
       };
     }
   }

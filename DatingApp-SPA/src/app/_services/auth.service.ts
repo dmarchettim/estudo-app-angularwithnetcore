@@ -40,15 +40,13 @@ export class AuthService {
       );
   }
 
-  register(model: any)
-  {
-    return this.http.post(this.baseURL + 'register', model).pipe(take(1));    
+  register(user: User){
+    return this.http.post(this.baseURL + 'register', user).pipe(take(1));
   }
 
-  loggedIn()
-  {
+  loggedIn(){
     const token = localStorage.getItem('token');
-
+    
     //se o token estiver expirado, entao o usuario nao está logado
     return !this.helper.isTokenExpired(token);
   }
