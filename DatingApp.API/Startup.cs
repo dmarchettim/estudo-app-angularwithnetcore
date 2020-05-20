@@ -74,6 +74,9 @@ namespace DatingApp.API
             //adicionando Health Check:
             services.AddHealthChecks();
 
+            //adicionando o Filter que criamos para setar o LastActivity do usuario
+            services.AddScoped<LoginUserActivity>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

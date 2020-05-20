@@ -3,7 +3,7 @@ import { AuthService } from '../_services/auth.service';
 import { AlertifyService } from '../_services/alertify.service';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { debounce, debounceTime } from 'rxjs/operators';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker/public_api';
+//import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker/public_api';
 import { User } from '../_models/User';
 import { Route } from '@angular/compiler/src/core';
 import { Router } from '@angular/router';
@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   model: any = {};
   user: User;
-  bsConfig: Partial<BsDatepickerConfig>;
+  //bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(
     private authService: AuthService, 
@@ -39,9 +39,9 @@ export class RegisterComponent implements OnInit {
     //   confirmPassword: new FormControl('', Validators.required),
     // }, this.passwordMatchValidator);
 
-    this.bsConfig = {
-      containerClass: 'theme-red'
-    }
+    // this.bsConfig = {
+    //   containerClass: 'theme-red'
+    // }
 
     this.registerForm = this.fb.group({
       gender: ['male'],

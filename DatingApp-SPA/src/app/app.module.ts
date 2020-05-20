@@ -1,14 +1,15 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule} from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtModule } from '@auth0/angular-jwt';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+//import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule  } from 'ng2-file-upload';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -28,6 +29,14 @@ export function tokenGetter() {
    return localStorage.getItem("token");
  }
 
+//  export class CustomHammerConfig extends HammerGestureConfig {
+//     overrides = {
+//        pinch: { enabler: false},
+//        rotate: {enable: false}
+//     };
+//  } , 
+//HammerGestureConfig, HAMMER_GESTURE_CONFIG 
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -40,7 +49,8 @@ export function tokenGetter() {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
-      PhotoEditorComponent
+      PhotoEditorComponent,
+      TimeAgoPipe
    ],
    imports: [
       BrowserModule,
@@ -50,7 +60,7 @@ export function tokenGetter() {
       BrowserAnimationsModule,
       NgxGalleryModule,
       BsDropdownModule.forRoot(),
-      BsDatepickerModule.forRoot(),
+      //BsDatepickerModule.forRoot(),
       TabsModule.forRoot(),
       FileUploadModule,
       AppRoutingModule,
@@ -64,6 +74,7 @@ export function tokenGetter() {
    ],
    providers: [
       ErrorInterceptorProvider
+      //{ provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig}
    ],
    bootstrap: [
       AppComponent
