@@ -27,11 +27,15 @@ namespace DatingApp.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
-            var users = await repository.GetUsers();
+            //var users = await repository.GetUsers();
+            var users = await repository.GetUsers(userParams);
 
             var usersMapped = mapper.Map<IEnumerable<UserForListDTO>>(users);
+
+            //como estamos na Controller, temos acesso ao objeto Respose e, portanto, vamos usar o extended method que criamos
+            Response.AdicionarPaginacao(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
             return Ok(usersMapped);
         }
