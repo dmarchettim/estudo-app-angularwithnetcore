@@ -6,11 +6,14 @@ import { UserService } from "../_services/user.service";
 import { AlertifyService } from "../_services/alertify.service";
 import { catchError } from "rxjs/operators";
 import { Observable, of } from "rxjs";
+import { PaginatedResult } from "../_models/Pagination";
 
 @Injectable({
     providedIn: 'root'
   })
 export class MemberListResolver  implements Resolve<User> {
+    pageNumber = 1;
+    pageSize = 5;
 
     constructor(private userService: UserService,
         private alertify: AlertifyService,
@@ -18,7 +21,8 @@ export class MemberListResolver  implements Resolve<User> {
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         console.log(route);
-        return this.userService.getUsers().pipe(
+        return this.userService.getUsers(this.pageNumber, this.pageSize)
+        .pipe(
             catchError(error => {
                 this.alertify.error(error);
                 this.router.navigate(['/home']);
