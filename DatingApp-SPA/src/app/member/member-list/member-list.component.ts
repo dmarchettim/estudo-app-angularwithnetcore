@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../_services/user.service';
 import { AlertifyService } from '../../_services/alertify.service';
 import { User } from '../../_models/User';
-import { PaginatedResult } from 'src/app/_models/Pagination';
+import { PaginatedResult, Pagination } from 'src/app/_models/Pagination';
 import { Router, Route, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -12,6 +12,7 @@ import { Router, Route, ActivatedRoute } from '@angular/router';
 })
 export class MemberListComponent implements OnInit {
   users: User[];
+  pagination: Pagination;
 
   constructor(
     private userService: UserService, 
@@ -20,7 +21,9 @@ export class MemberListComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.loadUsers();
+    this.users = this.activatedRoute.snapshot.data['usersResolver'].result;
+    this.pagination = this.activatedRoute.snapshot.data['usersResolver'].pagination;
+    //this.loadUsers();
   }
 
   loadUsers()
@@ -31,12 +34,21 @@ export class MemberListComponent implements OnInit {
     //   this.alertifyService.error("Falha ao carregar os usuários")
     // })
 
-     this.userService.getUsers(1, 5).subscribe((paginatedResult: PaginatedResult<User[]>) => {
-       this.users = paginatedResult.result
-     }, error => {
-       this.alertifyService.error("Falha ao carregar os usuários")
-     })
+      this.userService.getUsers(this.pagination.currentPage, this.pagination.itemsPerPage)
+      .subscribe((paginatedResult: PaginatedResult<User[]>) => {
+        this.users = paginatedResult.result;
+        this.pagination = paginatedResult.pagination;
+      }, error => {
+        this.alertifyService.error("Falha ao carregar os usuários")
+      })
+
+     
     
+  }
+
+  onPageChanged(event: any){
+    this.pagination.currentPage = event.page;
+    this.loadUsers();
   }
 
 

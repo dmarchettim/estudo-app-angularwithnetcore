@@ -16,7 +16,7 @@ import { PreventUnsavedChanges } from './_guards/prevent-unsaved-chaves.guard';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'members', component: MemberListComponent, canActivate: [AuthGuard] },
+  { path: 'members', component: MemberListComponent, canActivate: [AuthGuard], resolve: { usersResolver: MemberListResolver }  },
   { 
     path: 'members/edit',
     component: MemberEditComponent,

@@ -11,17 +11,18 @@ namespace DatingApp.API.Helpers
         {
             response.Headers.Add("Application-Error", mensagem);
             response.Headers.Add("Acess-Control-Expose-Headers", "Application-Error");
-            response.Headers.Add("Acess-Control-Allow-Origin", "*");
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
 
         public static void AdicionarPaginacao(this HttpResponse response, int currentPage, 
         int ItemsPerPage, int totalItems, int totalPages)
         {
-            var paginationHeader = new PaginationHeader(currentPage, ItemsPerPage, totalPages, totalPages);
+            var paginationHeader = new PaginationHeader(currentPage, ItemsPerPage, totalItems, totalPages);
             var camelCaseFormatter = new JsonSerializerSettings();
             camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
             response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter));
-            response.Headers.Add("Acess-Control-Expose-Headers", "Pagination");
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
 
         public static int CalcularIdade(this DateTime dataEmQuestao)
