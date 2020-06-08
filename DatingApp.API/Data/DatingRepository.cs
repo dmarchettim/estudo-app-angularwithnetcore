@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +35,35 @@ namespace DatingApp.API.Data
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users =  _context.Users.Include(p => p.Photos);//.ToListAsync();
+            var users =  _context.Users.Include(p => p.Photos)
+                            .OrderByDescending(u => u.LastActive)
+                            .AsQueryable();//.ToListAsync();
+
+            users = users.Where(u => u.Id != userParams.UserId);
+
+            users = users.Where(u => u.Gender == userParams.Gender);
+
+            //se o usuario ta filtrando por idade tbm
+            if(userParams.MinAge != 18 || userParams.MaxAge != 99)
+            {
+                var minDateOfBirthday = DateTime.Today.AddYears(- userParams.MaxAge -1);
+                var maxDateOfBirthday = DateTime.Today.AddYears(- userParams.MinAge);
+
+                users = users.Where(u => u.DateOfBirth >= minDateOfBirthday && u.DateOfBirth <= maxDateOfBirthday);
+            }
+
+            if(!string.IsNullOrEmpty(userParams.OrderBy))
+            {
+                switch(userParams.OrderBy)
+                {
+                    case "created":
+                        users = users.OrderByDescending(u => u.Created);
+                        break;
+                    default:
+                        users = users.OrderByDescending(u => u.LastActive);
+                        break;
+                }
+            }
 
             //utilizar o metodo static que criamos em PagedList para criar um objeto do tipo PagedList<T>..
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);            

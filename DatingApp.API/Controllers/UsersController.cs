@@ -29,12 +29,23 @@ namespace DatingApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var userFromRepo = await repository.GetUser(currentUserId);
+
+            userParams.UserId = currentUserId;
+
+            if(string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+
             //var users = await repository.GetUsers();
             var users = await repository.GetUsers(userParams);
 
             var usersMapped = mapper.Map<IEnumerable<UserForListDTO>>(users);
 
-            //como estamos na Controller, temos acesso ao objeto Respose e, portanto, vamos usar o extended method que criamos
+            //como estamos na Controller, temos acesso ao objeto Response e, portanto, vamos usar o extended method que criamos
             Response.AdicionarPaginacao(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
 
             return Ok(usersMapped);
@@ -57,6 +68,8 @@ namespace DatingApp.API.Controllers
             //verificando se o ID informado é o mesmo do ID do corpo
             if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             return Unauthorized("Usuário diferente do ID fornecido no token");
+
+            
 
             var userFromRepo = await repository.GetUser(id);
             

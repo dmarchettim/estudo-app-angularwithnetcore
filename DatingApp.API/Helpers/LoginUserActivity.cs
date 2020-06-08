@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection; //para obter o serviço
 
 namespace DatingApp.API.Helpers
 {
+    //como colocanos na controller UserController, toda vez q chamarmos qlqr metodo/endpoint la,
+    //em paralelo chamará esse método aqui
     public class LoginUserActivity : IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
