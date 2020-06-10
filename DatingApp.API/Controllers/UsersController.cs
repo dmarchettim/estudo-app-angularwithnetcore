@@ -6,6 +6,7 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.DTO;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,6 +86,35 @@ namespace DatingApp.API.Controllers
             return NoContent();
 
             throw new System.Exception($"Falha ao atualizar o Usuário com ID {id}");
+        }
+
+        [HttpPost("{id}/like/{recipientId}")]        
+        public async Task<IActionResult> GetLikes(int id, int recipientId)
+        {
+             if(id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            return Unauthorized("Usuário diferente do ID fornecido no token");
+
+            var like = await repository.GetLike(id, recipientId);
+
+            if (like != null)
+                return BadRequest("Você já curtiu esse usuário");
+
+            if(await repository.GetUser(recipientId) == null)
+                return NotFound();
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            repository.Add<Like>(like);
+
+            if(await repository.SaveAll())
+                return Ok();
+            
+            return BadRequest("Falha ao curtir o usuário");          
+
         }
 
     }
