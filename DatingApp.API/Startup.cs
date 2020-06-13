@@ -58,6 +58,18 @@ namespace DatingApp.API
             services.RegistryIoC();
             //Registry.RegistryIoC(services);
 
+            /*
+            resolvendo o erro abaixo:
+             "System.Text.Json.JsonException: A possible object cycle was detected which is not supported. This can either be due to a cycle or if the object depth is larger than the maximum allowed depth of 32."
+            */
+
+            services.AddMvc()                
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddNewtonsoftJson(opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = 
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+
             //adicionando geração do token JWT com IdentityModel.Tokens.Jwt
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

@@ -14,6 +14,8 @@ namespace DatingApp.API.Data
          public DbSet<Photo> Photos { get; set; }
          public DbSet<Like> Likes { get; set; }
 
+         public DbSet<Message> Messages { get; set; }
+
         //metodo criado com Fluent API para configurar o N para N da Tabela de Likes
          protected override void OnModelCreating(ModelBuilder builder)
          {
@@ -30,6 +32,18 @@ namespace DatingApp.API.Data
                 .HasOne(u => u.Liker)
                 .WithMany(u => u.Likees)
                 .HasForeignKey(u => u.LikerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Message>()
+                .HasOne(u => u.Sender)
+                .WithMany(m => m.MessagesSent)
+                //.HasForeignKey(u => u.Id)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Message>()
+                .HasOne(u => u.Recipient)
+                .WithMany(m => m.MessagesReceived)
+                //.HasForeignKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Restrict);
 
          }
